@@ -394,13 +394,13 @@ end
 
 function findpairs(kdtree::Any,datcrt::Matrix{Float64},knum::Number,lia::BitVector)
 
-    lia[scipyspat.cKDTree.query(kdtree,datcrt, k=knum)[2],:] .= 0
+    lia[reduce(vcat,knn(kdtree,datcrt', knum)[1]),:] .= 0
+    # ^ TODO: verify potential to reduce heap allocation, i.e. use a foreach loop or replace using another kNN
     return lia
 
 end
 
-function fillmat!(canrad::CANRAD,kdtree::PyObject,datcrt::Matrix{Float64},
-    knum::Number,mat2ev::Matrix{Int64})
+function fillmat!(canrad::CANRAD,kdtree::NearestNeighbors.KDTree,datcrt::Matrix{Float64},knum::Number,mat2ev::Matrix{UInt8})
 
     @unpack diameter, lia = canrad
     fill!(lia,1)
