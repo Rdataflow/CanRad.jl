@@ -400,7 +400,7 @@ function findpairs(kdtree::Any,datcrt::Matrix{Float64},knum::Number,lia::BitVect
 end
 
 function fillmat!(canrad::CANRAD,kdtree::PyObject,datcrt::Matrix{Float64},
-    knum::Number,mat2ev::Matrix{Int64})
+    knum::Number,mat2ev::Matrix{UInt8})
 
     @unpack diameter, lia = canrad
     fill!(lia,1)

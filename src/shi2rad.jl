@@ -51,7 +51,7 @@ function shi2rad!(shif::String,par_in_shi::Dict{String, Any},
 
         if SHI_summer && (pts_m[crx] .== 1)
 
-            mat2ev = Int64.(shi_ds["SHI_summer"][:,:,crx])
+            mat2ev = shi_ds["SHI_summer"][:,:,crx]
 
             svf_p, svf_h = calc_svf(canrad,mat2ev)
             dataset["svf_planar_s"][crx] = UInt8(round(svf_p*100))
@@ -71,7 +71,7 @@ function shi2rad!(shif::String,par_in_shi::Dict{String, Any},
 
         if SHI_winter && (pts_m[crx] .== 1)
 
-            mat2ev = Int64.(shi_ds["SHI_winter"][:,:,crx])
+            mat2ev = shi_ds["SHI_winter"][:,:,crx]
 
             svf_p, svf_h = calc_svf(canrad,mat2ev)
             dataset["svf_planar_w"][crx] = UInt8(round(svf_p*100))
@@ -91,7 +91,7 @@ function shi2rad!(shif::String,par_in_shi::Dict{String, Any},
 
         if SHI_terrain
 
-            mat2ev = Int64.(shi_ds["SHI_terrain"][:,:,crx])
+            mat2ev = shi_ds["SHI_terrain"][:,:,crx]
 
             svf_p, svf_h = calc_svf(canrad,mat2ev)
             dataset["svf_planar_t"][crx] = UInt8(round(svf_p*100))
@@ -111,7 +111,7 @@ function shi2rad!(shif::String,par_in_shi::Dict{String, Any},
 
         if SHI_evergreen && (pts_m[crx] .== 1)
 
-            mat2ev = Int64.(shi_ds["SHI_evergreen"][:,:,crx])
+            mat2ev = shi_ds["SHI_evergreen"][:,:,crx]
 
             svf_p, svf_h = calc_svf(canrad,mat2ev)
             dataset["svf_planar_e"][crx] = UInt8(round(svf_p*100))

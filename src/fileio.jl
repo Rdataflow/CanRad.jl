@@ -670,7 +670,7 @@ function createfiles_fromSHI(outdir::String,outstr::String,pts::Matrix{Float64},
 
 end
 
-function create_exmat(outdir::String,outstr::String,pts::Matrix{Float64},g_img::Matrix{Int64})
+function create_exmat(outdir::String,outstr::String,pts::Matrix{Float64},g_img::Matrix{UInt8})
 
     outfile  = joinpath(outdir,"SHIs_"*outstr*".nc")
 
@@ -688,7 +688,7 @@ function create_exmat(outdir::String,outstr::String,pts::Matrix{Float64},g_img::
 
 end
 
-function create_exmat_terrain(outdir::String,outstr::String,pts::Matrix{Float64},g_img::Matrix{Int64})
+function create_exmat_terrain(outdir::String,outstr::String,pts::Matrix{Float64},g_img::Matrix{UInt8})
 
     outfile  = joinpath(outdir,"SHIs_"*outstr*".nc")
 
@@ -706,7 +706,7 @@ function create_exmat_terrain(outdir::String,outstr::String,pts::Matrix{Float64}
 
 end
 
-function create_exmat(outdir::String,outstr::String,pts::Matrix{Float64},g_img::Matrix{Int64},forest_type::String,
+function create_exmat(outdir::String,outstr::String,pts::Matrix{Float64},g_img::Matrix{UInt8},forest_type::String,
                     season::String,calc_terrain::Bool)
 
     outfile  = joinpath(outdir,"SHIs_"*outstr*".nc")

@@ -3,7 +3,7 @@
     # image parameters
     radius::Int64 = 500
     diameter::Int64 = radius*2
-    mat2ev::Matrix{Int64}   = ones(radius*2,radius*2)
+    mat2ev::Matrix{UInt8}   = ones(radius*2,radius*2)
     imsize::Tuple{Int64, Int64} = size(mat2ev)
 
     tgrid1::Matrix{Float64} = ((1:radius*2)' .* ones(radius*2))

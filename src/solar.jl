@@ -1,4 +1,4 @@
-function calcringratios(canrad::CANRAD,mat2ev::Matrix{Int64})
+function calcringratios(canrad::CANRAD,mat2ev::Matrix{UInt8})
 
     @unpack w2all, relevant_pix, ring_radius = canrad
 
@@ -11,7 +11,7 @@ function calcringratios(canrad::CANRAD,mat2ev::Matrix{Int64})
 
 end
 
-function calc_svf(canrad::CANRAD,mat2ev::Matrix{Int64})
+function calc_svf(canrad::CANRAD,mat2ev::Matrix{UInt8})
 
     w2all = calcringratios(canrad,mat2ev)
 
@@ -30,7 +30,7 @@ function getsundxs!(window::Matrix{Float64},trans_for::Vector{Float64},
 end
 
 function calc_transmissivity!(canrad::CANRAD,solar::SOLAR,trans_for::Vector{Float64},
-    mat2ev::Matrix{Float64},sol_phi::Vector{Float64},sol_tht::Vector{Float64},
+    mat2ev::Matrix{UInt8},sol_phi::Vector{Float64},sol_tht::Vector{Float64},
     imcX=0.0::Float64,imcY=0.0::Float64) # imcX and imcY are offsets from centre if 'tilt' is enabled
 
     @unpack lens_profile_tht, lens_profile_rpix, im_centre, radius, imsize = canrad
