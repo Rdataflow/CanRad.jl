@@ -54,12 +54,12 @@ function shi2rad!(shif::String,par_in_shi::Dict{String, Any},
             mat2ev = Int64.(shi_ds["SHI_summer"][:,:,crx])
 
             svf_p, svf_h = calc_svf(canrad,mat2ev)
-            dataset["svf_planar_s"][crx] = Int8(round(svf_p*100))
-            dataset["svf_hemi_s"][crx]   = Int8(round(svf_h*100))
+            dataset["svf_planar_s"][crx] = UInt8(round(svf_p*100))
+            dataset["svf_hemi_s"][crx]   = UInt8(round(svf_h*100))
 
             fill!(trans_for,0)
             calc_transmissivity!(canrad,solar,trans_for,float(mat2ev),sol_phi,sol_tht)
-            dataset["for_trans_s"][:,crx] = Int8.(round.((vec(aggregate_data(solar,trans_for)))*100))
+            dataset["for_trans_s"][:,crx] = UInt8.(round.((vec(aggregate_data(solar,trans_for)))*100))
 
             if calc_swr > 0
                 swrtot, swrdir = calculateSWR(radiation,trans_for,sol_sinelev,svf_p,calc_swr)
@@ -74,12 +74,12 @@ function shi2rad!(shif::String,par_in_shi::Dict{String, Any},
             mat2ev = Int64.(shi_ds["SHI_winter"][:,:,crx])
 
             svf_p, svf_h = calc_svf(canrad,mat2ev)
-            dataset["svf_planar_w"][crx] = Int8(round(svf_p*100))
-            dataset["svf_hemi_w"][crx]   = Int8(round(svf_h*100))
+            dataset["svf_planar_w"][crx] = UInt8(round(svf_p*100))
+            dataset["svf_hemi_w"][crx]   = UInt8(round(svf_h*100))
 
             fill!(trans_for,0)
             calc_transmissivity!(canrad,solar,trans_for,float(mat2ev),sol_phi,sol_tht)
-            dataset["for_trans_w"][:,crx] = Int8.(round.((vec(aggregate_data(solar,trans_for)))*100))
+            dataset["for_trans_w"][:,crx] = UInt8.(round.((vec(aggregate_data(solar,trans_for)))*100))
 
             if calc_swr > 0
                 swrtot, swrdir = calculateSWR(radiation,trans_for,sol_sinelev,svf_p,calc_swr)
@@ -94,12 +94,12 @@ function shi2rad!(shif::String,par_in_shi::Dict{String, Any},
             mat2ev = Int64.(shi_ds["SHI_terrain"][:,:,crx])
 
             svf_p, svf_h = calc_svf(canrad,mat2ev)
-            dataset["svf_planar_t"][crx] = Int8(round(svf_p*100))
-            dataset["svf_hemi_t"][crx]   = Int8(round(svf_h*100))
+            dataset["svf_planar_t"][crx] = UInt8(round(svf_p*100))
+            dataset["svf_hemi_t"][crx]   = UInt8(round(svf_h*100))
 
             fill!(trans_for,0)
             calc_transmissivity!(canrad,solar,trans_for,float(mat2ev),sol_phi,sol_tht)
-            dataset["trans_t"][:,crx] = Int8.(round.((vec(aggregate_data(solar,trans_for)))*100))
+            dataset["trans_t"][:,crx] = UInt8.(round.((vec(aggregate_data(solar,trans_for)))*100))
 
             if calc_swr > 0
                 swrtot, swrdir = calculateSWR(radiation,trans_for,sol_sinelev,svf_p,calc_swr)
@@ -114,12 +114,12 @@ function shi2rad!(shif::String,par_in_shi::Dict{String, Any},
             mat2ev = Int64.(shi_ds["SHI_evergreen"][:,:,crx])
 
             svf_p, svf_h = calc_svf(canrad,mat2ev)
-            dataset["svf_planar_e"][crx] = Int8(round(svf_p*100))
-            dataset["svf_hemi_e"][crx]   = Int8(round(svf_h*100))
+            dataset["svf_planar_e"][crx] = UInt8(round(svf_p*100))
+            dataset["svf_hemi_e"][crx]   = UInt8(round(svf_h*100))
 
             fill!(trans_for,0)
             calc_transmissivity!(canrad,solar,trans_for,float(mat2ev),sol_phi,sol_tht)
-            dataset["for_trans_e"][:,crx] = Int8.(round.((vec(aggregate_data(solar,trans_for)))*100))
+            dataset["for_trans_e"][:,crx] = UInt8.(round.((vec(aggregate_data(solar,trans_for)))*100))
 
             if calc_swr > 0
                 swrtot, swrdir = calculateSWR(radiation,trans_for,sol_sinelev,svf_p,calc_swr)

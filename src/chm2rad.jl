@@ -701,13 +701,13 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
         if forest_type == "evergreen"
 
             svf_p_e, svf_h_e = calc_svf(canrad,mat2ev_e)
-            dataset["svf_planar_e"][crx] = Int8(round(svf_p_e*100))
-            dataset["svf_hemi_e"][crx]   = Int8(round(svf_h_e*100))
+            dataset["svf_planar_e"][crx] = UInt8(round(svf_p_e*100))
+            dataset["svf_hemi_e"][crx]   = UInt8(round(svf_h_e*100))
 
             if calc_trans
                 fill!(trans_for,0)
                 calc_transmissivity!(canrad,solar,trans_for,float(mat2ev_e),sol_phi,sol_tht)
-                dataset["for_trans_e"][:,crx] = Int8.(round.((vec(aggregate_data(solar,trans_for)))*100));
+                dataset["for_trans_e"][:,crx] = UInt8.(round.((vec(aggregate_data(solar,trans_for)))*100));
 
                 if calc_swr > 0
                     swrtot, swrdir = calculateSWR(radiation,trans_for,sol_sinelev,svf_p_e,calc_swr)
@@ -722,13 +722,13 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
             if (season == "summer") || (season == "both")
 
                 svf_p_s, svf_h_s = calc_svf(canrad,mat2ev_s)
-                dataset["svf_planar_s"][crx] = Int8(round(svf_p_s*100))
-                dataset["svf_hemi_s"][crx]  = Int8(round(svf_h_s*100))
+                dataset["svf_planar_s"][crx] = UInt8(round(svf_p_s*100))
+                dataset["svf_hemi_s"][crx]  = UInt8(round(svf_h_s*100))
 
                 if calc_trans
                     fill!(trans_for,0)
                     calc_transmissivity!(canrad,solar,trans_for,float(mat2ev_s),sol_phi,sol_tht)
-                    dataset["for_trans_s"][:,crx] = Int8.(round.((vec(aggregate_data(solar,trans_for)))*100))
+                    dataset["for_trans_s"][:,crx] = UInt8.(round.((vec(aggregate_data(solar,trans_for)))*100))
 
                     if calc_swr > 0
                         swrtot, swrdir = calculateSWR(radiation,trans_for,sol_sinelev,svf_p_s,calc_swr)
@@ -742,13 +742,13 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
             if (season == "winter") || (season == "both")
 
                 svf_p_w, svf_h_w = calc_svf(canrad,mat2ev_w)
-                dataset["svf_planar_w"][crx] = Int8(round(svf_p_w*100))
-                dataset["svf_hemi_w"][crx]   = Int8(round(svf_h_w*100))
+                dataset["svf_planar_w"][crx] = UInt8(round(svf_p_w*100))
+                dataset["svf_hemi_w"][crx]   = UInt8(round(svf_h_w*100))
 
                 if calc_trans
                     fill!(trans_for,0)
                     calc_transmissivity!(canrad,solar,trans_for,float(mat2ev_w),sol_phi,sol_tht)
-                    dataset["for_trans_w"][:,crx] = Int8.(round.((vec(aggregate_data(solar,trans_for)))*100));
+                    dataset["for_trans_w"][:,crx] = UInt8.(round.((vec(aggregate_data(solar,trans_for)))*100));
 
                     if calc_swr > 0
                         swrtot, swrdir = calculateSWR(radiation,trans_for,sol_sinelev,svf_p_w,calc_swr)
@@ -764,13 +764,13 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
         if calc_terrain
 
             svf_p_t, svf_h_t = calc_svf(canrad,mat2ev)
-            dataset["svf_planar_t"][crx] = Int8(round(svf_p_t*100))
-            dataset["svf_hemi_t"][crx]   = Int8(round(svf_h_t*100))
+            dataset["svf_planar_t"][crx] = UInt8(round(svf_p_t*100))
+            dataset["svf_hemi_t"][crx]   = UInt8(round(svf_h_t*100))
 
             if calc_trans 
                 fill!(trans_for,0)
                 calc_transmissivity!(canrad,solar,trans_for,float(mat2ev),sol_phi,sol_tht)
-                dataset["trans_t"][:,crx] = Int8.(round.((vec(aggregate_data(solar,trans_for)))*100));
+                dataset["trans_t"][:,crx] = UInt8.(round.((vec(aggregate_data(solar,trans_for)))*100));
 
                 if calc_swr > 0
                     swrtot, swrdir = calculateSWR(radiation,trans_for,sol_sinelev,svf_p_t,calc_swr)
