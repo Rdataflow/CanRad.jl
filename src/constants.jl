@@ -18,9 +18,6 @@
     # g_coorpol::Matrix{Float64} = [vec(g_phi) vec(g_tht)]
     g_coorcrt::Matrix{Float64} = [vec(tgrid1) vec(tgrid2)]
 
-    lia::BitVector = Bool.(zeros(size(g_coorcrt,1)))
-    kdtreedims::Int64  = size(g_coorcrt,1)
-
     # parameters for Vf calculations
     im_centre::Float64 = radius
 

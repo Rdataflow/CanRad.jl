@@ -4,7 +4,7 @@ using DelimitedFiles, DataStructures, LasIO, LazIO,
     Statistics, Dates, Interpolations, Images,
     DataFrames, Format, Distributed, Distributions,
     SpatialFileIO, NCDatasets, Chain, Pkg, Proj, MarketTechnicals,
-    Parameters, Impute, NearestNeighbors
+    Parameters, Impute
 
 using Conda, PyCall
 
@@ -68,7 +68,6 @@ export
     findelev,
     findelev!,
     findmincol,
-    findpairs,
     frbins,
     get_pkg_version,
     getimagecentre,

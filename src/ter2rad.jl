@@ -87,9 +87,6 @@ function ter2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
     outside_img = isnan.(g_rad)
     g_coorcrt .= ((g_coorcrt .- radius) ./ radius) .* 90
 
-    # make g_coorcrt a KDtree for easy look up
-    kdtree = KDTree(g_coorcrt'; leafsize = 18, reorder = true)
-
     @unpack ring_radius, ring_tht, surf_area_p, surf_area_h, relevant_pix = canrad
     for rix = 1:1:size(ring_radius,1)-1
         relevant_pix[:,rix] = (ring_radius[rix] .< vec(g_rad) .< ring_radius[rix+1])
@@ -161,11 +158,11 @@ function ter2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
         # combine the datasets and occupy the image matrix
         fill!(mat2ev,1);
         if !isempty(dtm_x) && terrain_highres
-            prepterdat!(append!(pt_dtm_x,pt_dem_x),append!(pt_dtm_y,pt_dem_y));
-            fillmat!(canrad,kdtree,hcat(pt_dtm_x,pt_dtm_y),13,mat2ev);
+            #prepterdat!(append!(pt_dtm_x,pt_dem_x),append!(pt_dtm_y,pt_dem_y));
+            fillmat!(canrad,hcat(pt_dtm_x,pt_dtm_y),13,mat2ev);
         else
-            prepterdat!(pt_dem_x,pt_dem_y);
-            fillmat!(canrad,kdtree,hcat(pt_dem_x,pt_dem_y),13,mat2ev);
+            #prepterdat!(pt_dem_x,pt_dem_y);
+            fillmat!(canrad,hcat(pt_dem_x,pt_dem_y),13,mat2ev);
         end
 
 

@@ -372,9 +372,6 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
     outside_img = isnan.(g_rad)
     g_coorcrt .= ((g_coorcrt .- radius) ./ radius) .* 90
 
-    # make g_coorcrt a KDtree for easy look up
-    kdtree = KDTree(g_coorcrt'; leafsize = 18, reorder = true)
-
     @unpack ring_radius, ring_tht, surf_area_p, surf_area_h, relevant_pix = canrad
     for rix = 1:1:size(ring_radius,1)-1
         relevant_pix[:,rix] = (ring_radius[rix] .< vec(g_rad) .< ring_radius[rix+1])
@@ -574,7 +571,7 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
         terrainmask_precalc ? copy!(mat2ev,terrain_mask[:,:,crx]) : fill!(mat2ev,1)
 
         # create base + terrian image matrix
-        fillmat!(canrad,kdtree,hcat(pt_dtm_x,pt_dtm_y),10,mat2ev);
+        fillmat!(canrad,hcat(pt_dtm_x,pt_dtm_y),10,mat2ev);
 
         # occupy matrices
         if ((special_implementation == "swissrad") || (special_implementation == "oshd"))# && (forest_flag == 2)
@@ -583,13 +580,13 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
             copy!(mat2ev_s,mat2ev)
 
             if pts_m[crx] .== 1
-                fillmat!(canrad,kdtree,hcat(pt_chm_x_w,pt_chm_y_w),30,mat2ev_w)
-                fillmat!(canrad,kdtree,hcat(pt_chm_x_s,pt_chm_y_s),30,mat2ev_s)
+                fillmat!(canrad,hcat(pt_chm_x_w,pt_chm_y_w),30,mat2ev_w)
+                fillmat!(canrad,hcat(pt_chm_x_s,pt_chm_y_s),30,mat2ev_s)
                 if forest_flag == 2 
                     # thick canopy treated as opaque in summer or in evergreen forests
-                    fillmat!(canrad,kdtree,hcat(pt_chm_x_thick_s,pt_chm_y_thick_s),15,mat2ev_s); # distance canopy is opaque and treated with terrain
+                    fillmat!(canrad,hcat(pt_chm_x_thick_s,pt_chm_y_thick_s),15,mat2ev_s); # distance canopy is opaque and treated with terrain
                     # include canopy surface points for more definition at the tops of trees
-                    fillmat!(canrad,kdtree,hcat(pt_chm_x_pts,pt_chm_y_pts),20,mat2ev_s); # include canopy surface points
+                    fillmat!(canrad,hcat(pt_chm_x_pts,pt_chm_y_pts),20,mat2ev_s); # include canopy surface points
                 end
 
                 mat2ev_w[outside_img] .= 1
@@ -605,8 +602,8 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
             copy!(mat2ev_w,mat2ev)
 
             if pts_m[crx] .== 1
-                fillmat!(canrad,kdtree,hcat(pt_chm_x_w,pt_chm_y_w),30,mat2ev_w)
-                fillmat!(canrad,kdtree,hcat(pt_chm_x_thick_w,pt_chm_y_thick_w),15,mat2ev_w) # distant canopy is opaque and treated with terrain
+                fillmat!(canrad,hcat(pt_chm_x_w,pt_chm_y_w),30,mat2ev_w)
+                fillmat!(canrad,hcat(pt_chm_x_thick_w,pt_chm_y_thick_w),15,mat2ev_w) # distant canopy is opaque and treated with terrain
                 mat2ev_w[outside_img] .= 1
                 save_images && (images["SHI_winter"][:,:,crx] = mat2ev_w)
             end
@@ -616,9 +613,9 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
             if forest_type == "evergreen"
 
                 copy!(mat2ev_e,mat2ev)
-                fillmat!(canrad,kdtree,hcat(pt_chm_x,pt_chm_y),30,mat2ev_e)
-                fillmat!(canrad,kdtree,hcat(pt_chm_x_thick,pt_chm_y_thick),15,mat2ev_e) # distant canopy is opaque and treated with terrain
-                fillmat!(canrad,kdtree,hcat(pt_chm_x_pts,pt_chm_y_pts),20,mat2ev_e) # canopy surface points included for definition
+                fillmat!(canrad,hcat(pt_chm_x,pt_chm_y),30,mat2ev_e)
+                fillmat!(canrad,hcat(pt_chm_x_thick,pt_chm_y_thick),15,mat2ev_e) # distant canopy is opaque and treated with terrain
+                fillmat!(canrad,hcat(pt_chm_x_pts,pt_chm_y_pts),20,mat2ev_e) # canopy surface points included for definition
                 mat2ev_e[outside_img] .= 1
                 save_images && (images["SHI_evergreen"][:,:,crx] = mat2ev_e)
 
@@ -627,16 +624,16 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
                 if (season == "summer") || (season == "both")
 
                     copy!(mat2ev_s,mat2ev)
-                    fillmat!(canrad,kdtree,hcat(pt_chm_x_s,pt_chm_y_s),30,mat2ev_s)
+                    fillmat!(canrad,hcat(pt_chm_x_s,pt_chm_y_s),30,mat2ev_s)
                     if tree_species == "needleleaf"
-                        fillmat!(canrad,kdtree,hcat(pt_chm_x_pts,pt_chm_y_pts),20,mat2ev_s); # include canopy surface points for more definition at the tops of trees
-                        fillmat!(canrad,kdtree,hcat(pt_chm_x_thick_s,pt_chm_y_thick_s),15,mat2ev_s); # thick canopy treated as opaque in summer
+                        fillmat!(canrad,hcat(pt_chm_x_pts,pt_chm_y_pts),20,mat2ev_s); # include canopy surface points for more definition at the tops of trees
+                        fillmat!(canrad,hcat(pt_chm_x_thick_s,pt_chm_y_thick_s),15,mat2ev_s); # thick canopy treated as opaque in summer
                     end
 
                     if include_trunks
                         for zdx = 1:1:size(rbins,1)-1
                             tridx = findall(rbins[zdx] .<= pt_tsm_z .< rbins[zdx+1])
-                            fillmat!(canrad,kdtree,hcat(pt_tsm_x[tridx],pt_tsm_y[tridx]),knum_t[zdx],mat2ev_s)
+                            fillmat!(canrad,hcat(pt_tsm_x[tridx],pt_tsm_y[tridx]),knum_t[zdx],mat2ev_s)
                         end
                     end
                     
@@ -648,7 +645,7 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
                 if (season == "winter") || (season == "both")
 
                     copy!(mat2ev_w,mat2ev)
-                    fillmat!(canrad,kdtree,hcat(pt_chm_x_w,pt_chm_y_w),30,mat2ev_w)
+                    fillmat!(canrad,hcat(pt_chm_x_w,pt_chm_y_w),30,mat2ev_w)
                     mat2ev_w[outside_img] .= 1
                     save_images && (images["SHI_winter"][:,:,crx] = mat2ev_w)
 

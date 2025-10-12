@@ -392,19 +392,39 @@ function prepsurfdat!(matcrt_x::Vector{Float64},matcrt_y::Vector{Float64},matcrt
 
 end
 
-function findpairs(kdtree::Any,datcrt::Matrix{Float64},knum::Number,lia::BitVector)
+function fillmat!(canrad::CANRAD,datcrt::Matrix{Float64},knum::Number,mat2ev::Matrix{UInt8})
 
-    lia[reduce(vcat,knn(kdtree,datcrt', knum)[1]),:] .= 0
-    # ^ TODO: verify potential to reduce heap allocation, i.e. use a foreach loop or replace using another kNN
-    return lia
+    @unpack diameter = canrad
 
-end
+    # convert x/y to linear pixel index
+    i = Int.(round.((datcrt .+ 90) .* ((diameter - 1) / 180))) * [diameter, 1] .+ 1
 
-function fillmat!(canrad::CANRAD,kdtree::NearestNeighbors.KDTree,datcrt::Matrix{Float64},knum::Number,mat2ev::Matrix{UInt8})
+    # TODO: ensure assert wont fail at the calling side
+    @info minimum(i), maximum(i), size(i), length(i)
+    # hacky workaround to ensure bounds
+    i .= min.(i, diameter ^ 2)
+    i .= max.(i, 1)
 
-    @unpack diameter, lia = canrad
-    fill!(lia,1)
-    mat2ev .*= (reshape(findpairs(kdtree,datcrt,knum,lia),(diameter,diameter)))
+    @assert minimum(i) > 0
+    @assert maximum(i) <= diameter ^ 2
+    @inbounds mat2ev[i] .= 0
+
+    # erode uses OffsetMatrix i.e.
+    # se9 = strel_box((3, 3))
+    # or
+    se13 = strel_diamond((5, 5); r=2)
+    # or
+    se21 = strel_diamond((5, 5); r=3)
+    # or
+    se25 = strel_diamond((7, 7); r=3)
+    # or
+    # se29 = copy(strel_diamond((7, 7); r=3));se29[-2,-2]=1;se29[-2,2]=1;se29[2,2]=1;se29[2,-2]=1;sum(se29);se29
+    se37 = strel_diamond((7,7), r=4)
+
+    se = knum < 20 ? se13 : ( knum < 25 ? se21 : ( knum < 30 ? se25 : se37 ) )
+
+    # grow each pixel by a strel pattern
+    erode!(mat2ev, mat2ev, se)
 
 end
 

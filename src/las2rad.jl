@@ -178,9 +178,6 @@ function las2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
     outside_img = isnan.(g_rad)
     g_coorcrt .= ((g_coorcrt .- radius) ./ radius) .* 90
 
-    # make g_coorcrt a KDtree for easy look up
-    kdtree = KDTree(g_coorcrt'; leafsize = 18, reorder = true)
-
     @unpack ring_radius, ring_tht, surf_area_p, surf_area_h, relevant_pix = canrad
     for rix = 1:1:size(ring_radius,1)-1
         relevant_pix[:,rix] = (ring_radius[rix] .< vec(g_rad) .< ring_radius[rix+1])
@@ -324,18 +321,18 @@ function las2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
         # occupy matrix with surface points
         for zdx = 1:1:size(rbins,1)-1
             ridx = findall(rbins[zdx] .<= pt_dsm_z .< rbins[zdx+1])
-            fillmat!(canrad,kdtree,hcat(pt_dsm_x[ridx],pt_dsm_y[ridx]),knum[zdx],mat2ev)
+            fillmat!(canrad,hcat(pt_dsm_x[ridx],pt_dsm_y[ridx]),knum[zdx],mat2ev)
             
             if season == "winter" && trunks
                 tridx = findall(rbins[zdx] .<= pt_tsm_z .< rbins[zdx+1])
-                fillmat!(canrad,kdtree,hcat(pt_tsm_x[tridx],pt_tsm_y[tridx]),knum_t[zdx],mat2ev)
+                fillmat!(canrad,hcat(pt_tsm_x[tridx],pt_tsm_y[tridx]),knum_t[zdx],mat2ev)
             end
         end
 
         # add terrain
-        !terrainmask_precalc && (fillmat!(canrad,kdtree,hcat(pt_dtm_x,pt_dtm_y),10,mat2ev))
+        !terrainmask_precalc && (fillmat!(canrad,hcat(pt_dtm_x,pt_dtm_y),10,mat2ev))
 
-        (season == "winter" && trunks) && (fillmat!(canrad,kdtree,hcat(pt_tsm_x,pt_tsm_y),10,mat2ev))
+        (season == "winter" && trunks) && (fillmat!(canrad,hcat(pt_tsm_x,pt_tsm_y),10,mat2ev))
 
         mat2ev[outside_img] .= 1
 
