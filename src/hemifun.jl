@@ -345,37 +345,13 @@ function hlm2cart(ter2rad::TER2RAD,rtht::Vector{Float64})
 
     pol_phi, pol_tht = fillterrain(rphi,rtht,0.0)
     pt_dtm_x, pt_dtm_y = pol2cart(pol_phi,pol_tht)
-    return prepterdat(pt_dtm_x,pt_dtm_y)
+    return pt_dtm_x,pt_dtm_y
 
 end
 
 function filterbyradius(phi::Vector{Float64},tht::Vector{Float64},rad::Vector{Float64},peri::Int64)
     rmdx = rad .> peri
     return deleteat!(phi,rmdx), deleteat!(tht,rmdx), deleteat!(rad,rmdx)
-end
-
-
-function prepterdat!(matcrt_x::Vector{Float64},matcrt_y::Vector{Float64})
-
-    matcrt_x .= round.(matcrt_x,digits = 1)
-    matcrt_y .= round.(matcrt_y,digits = 1)
-
-    rmdx = nonunique(DataFrame(hcat(matcrt_x,matcrt_y),:auto));
-
-    deleteat!(matcrt_x,rmdx)
-    deleteat!(matcrt_y,rmdx)
-
-end
-
-function prepterdat(matcrt_x::Vector{Float64},matcrt_y::Vector{Float64})
-
-    matcrt_x .= round.(matcrt_x,digits = 1)
-    matcrt_y .= round.(matcrt_y,digits = 1)
-
-    rmdx = nonunique(DataFrame(hcat(matcrt_x,matcrt_y),:auto));
-
-    return deleteat!(matcrt_x,rmdx), deleteat!(matcrt_y,rmdx)
-
 end
 
 function prepsurfdat!(matcrt_x::Vector{Float64},matcrt_y::Vector{Float64},matcrt_z::Vector{Float64})

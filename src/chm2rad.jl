@@ -457,11 +457,9 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
             if hlm_precalc && !oshd_flag
                 pt_dtm_x,pt_dtm_y = hlm2cart(ter2rad,hlm_tht[:,crx])
             elseif terrain_highres && (terrain_lowres || (hlm_precalc && oshd_flag))
-                prepterdat!(append!(pt_dtm_x,pt_dem_x),append!(pt_dtm_y,pt_dem_y));
-            elseif terrain_highres
-                prepterdat!(pt_dtm_x,pt_dtm_y)
+                append!(pt_dtm_x,pt_dem_x),append!(pt_dtm_y,pt_dem_y);
             elseif (terrain_lowres && !terrain_highres)
-                pt_dtm_x, pt_dtm_y = prepterdat(pt_dem_x,pt_dem_y)
+                pt_dtm_x, pt_dtm_y = pt_dem_x,pt_dem_y
             end
 
         end
@@ -473,9 +471,9 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
             pt_bhm_x, pt_bhm_y =  pcd2pol2cart!(ter2rad,pt_bhm_x,pt_bhm_y,pt_bhm_z,pts_x[crx],pts_y[crx],pts_e[crx],
                                                 "buildings",rbins_bhm,pts_z[crx],pts_slp[crx])
             if !terrainmask_precalc
-                prepterdat!(append!(pt_dtm_x,pt_bhm_x),append!(pt_dtm_y,pt_bhm_y));
+                append!(pt_dtm_x,pt_bhm_x),append!(pt_dtm_y,pt_bhm_y);
             else
-                pt_dtm_x, pt_dtm_y = prepterdat(pt_bhm_x,pt_bhm_y)
+                pt_dtm_x, pt_dtm_y = pt_bhm_x,pt_bhm_y
             end
 
         end

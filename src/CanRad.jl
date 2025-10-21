@@ -95,8 +95,6 @@ export
     pol2cart!,
     preallo_trunks,
     prepsurfdat!,
-    prepterdat!,
-    prepterdat,
     trunkpoints,
     utm2deg,
     write_metadata

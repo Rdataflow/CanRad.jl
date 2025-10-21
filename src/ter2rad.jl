@@ -158,10 +158,9 @@ function ter2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
         # combine the datasets and occupy the image matrix
         fill!(mat2ev,1);
         if !isempty(dtm_x) && terrain_highres
-            #prepterdat!(append!(pt_dtm_x,pt_dem_x),append!(pt_dtm_y,pt_dem_y));
+            append!(pt_dtm_x,pt_dem_x),append!(pt_dtm_y,pt_dem_y);
             fillmat!(canrad,hcat(pt_dtm_x,pt_dtm_y),13,mat2ev);
         else
-            #prepterdat!(pt_dem_x,pt_dem_y);
             fillmat!(canrad,hcat(pt_dem_x,pt_dem_y),13,mat2ev);
         end
 
