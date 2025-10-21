@@ -227,6 +227,10 @@ function las2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
 
         progress && (start = time())
 
+        x = pts_x[crx]
+        y = pts_y[crx]
+        coord = cfmt.("%.$(2)f", x)*"_"*cfmt.("%.$(2)f", y)
+
         #### transfer point clouds to polar coordinates
         if branches
             pt_dsm_x, pt_dsm_y, pt_dsm_z = getsurfdat(copy(dsm_x),copy(dsm_y),copy(dsm_z),copy(bsm_x),copy(bsm_y),copy(bsm_z),pts_x[crx],pts_y[crx],pts_e[crx],forest_peri)
@@ -339,6 +343,7 @@ function las2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
 
         mat2ev[outside_img] .= 1
 
+        make_pngs && save(joinpath(outdir,"SHI_"*coord*".png"), BitArray(mat2ev_s))
         save_images && (images["SHI"][:,:,crx] = mat2ev)
 
         if progress
@@ -392,7 +397,5 @@ function las2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
 
     close(dataset)
     save_images && close(images)
-
-    (save_images && make_pngs) && make_SHIs(outdir)
 
 end

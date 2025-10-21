@@ -429,6 +429,10 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
 
         progress && (start = time())
 
+        x = pts_x[crx]
+        y = pts_y[crx]
+        coord = cfmt.("%.$(2)f", x)*"_"*cfmt.("%.$(2)f", y)
+
         if !terrainmask_precalc
 
             if terrain_highres
@@ -595,6 +599,10 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
                 mat2ev_w[outside_img] .= 1
                 mat2ev_s[outside_img] .= 1
 
+                variant = "winter"
+                make_pngs && save(joinpath(outdir,"SHI_"*coord*"_"*variant*".png"), BitArray(mat2ev_w))
+                variant = "summer"
+                make_pngs && save(joinpath(outdir,"SHI_"*coord*"_"*variant*".png"), BitArray(mat2ev_s))
                 save_images && (images["SHI_summer"][:,:,crx] = mat2ev_s)
                 save_images && (images["SHI_winter"][:,:,crx] = mat2ev_w)
 
@@ -608,6 +616,8 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
                 fillmat!(canrad,kdtree,hcat(pt_chm_x_w,pt_chm_y_w),30,mat2ev_w)
                 fillmat!(canrad,kdtree,hcat(pt_chm_x_thick_w,pt_chm_y_thick_w),15,mat2ev_w) # distant canopy is opaque and treated with terrain
                 mat2ev_w[outside_img] .= 1
+                variant = "winter"
+                make_pngs && save(joinpath(outdir,"SHI_"*coord*"_"*variant*".png"), BitArray(mat2ev_w))
                 save_images && (images["SHI_winter"][:,:,crx] = mat2ev_w)
             end
 
@@ -620,6 +630,8 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
                 fillmat!(canrad,kdtree,hcat(pt_chm_x_thick,pt_chm_y_thick),15,mat2ev_e) # distant canopy is opaque and treated with terrain
                 fillmat!(canrad,kdtree,hcat(pt_chm_x_pts,pt_chm_y_pts),20,mat2ev_e) # canopy surface points included for definition
                 mat2ev_e[outside_img] .= 1
+                variant = "evergreen"
+                make_pngs && save(joinpath(outdir,"SHI_"*coord*"_"*variant*".png"), BitArray(mat2ev_e))
                 save_images && (images["SHI_evergreen"][:,:,crx] = mat2ev_e)
 
             elseif (forest_type == "deciduous") || (forest_type == "mixed")
@@ -641,6 +653,8 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
                     end
                     
                     mat2ev_s[outside_img] .= 1
+		    variant = "summer"
+		    make_pngs && save(joinpath(outdir,"SHI_"*coord*"_"*variant*".png"), BitArray(mat2ev_s))
                     save_images && (images["SHI_summer"][:,:,crx] = mat2ev_s)
 
                 end
@@ -650,6 +664,8 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
                     copy!(mat2ev_w,mat2ev)
                     fillmat!(canrad,kdtree,hcat(pt_chm_x_w,pt_chm_y_w),30,mat2ev_w)
                     mat2ev_w[outside_img] .= 1
+		    variant = "winter"
+		    make_pngs && save(joinpath(outdir,"SHI_"*coord*"_"*variant*".png"), BitArray(mat2ev_w))
                     save_images && (images["SHI_winter"][:,:,crx] = mat2ev_w)
 
                 end
@@ -661,6 +677,8 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
         end
 
         mat2ev[outside_img] .= 1
+        variant = "terrain"
+        (calc_terrain && make_pngs) && save(joinpath(outdir,"SHI_"*coord*"_"*variant*".png"), BitArray(mat2ev))
         (calc_terrain && save_images) && (images["SHI_terrain"][:,:,crx] = mat2ev)
 
         if progress
@@ -781,7 +799,5 @@ function chm2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
     close(dataset)
     save_images && close(images)
     save_horizon && close(hlm)
-
-    (save_images && make_pngs) && make_SHIs(outdir,forest_type,season,calc_terrain)
 
 end

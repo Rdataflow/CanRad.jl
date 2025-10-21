@@ -129,6 +129,10 @@ function ter2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
 
         progress && (start = time())
 
+        x = pts_x[crx]
+        y = pts_y[crx]
+        coord = cfmt.("%.$(2)f", x)*"_"*cfmt.("%.$(2)f", y)
+
         # get the high-res local terrain
         if !isempty(dtm_x) && terrain_highres
 
@@ -172,6 +176,8 @@ function ter2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
         # create the image matrix
         mat2ev[outside_img] .= 1;
 
+        variant = "terrain"
+        make_pngs && save(joinpath(outdir,"SHI_"*coord*"_"*variant*".png"), BitArray(mat2ev))
         save_images && (images["SHI_terrain"][:,:,crx] = mat2ev;)
 
         # calculate svf and transmissivity
@@ -214,7 +220,5 @@ function ter2rad!(pts::Matrix{Float64},dat_in::Dict{String, String},par_in::Dict
     close(dataset)
     save_images && close(images)
     save_horizon && close(hlm)
-
-    (save_images && make_pngs) && make_SHIs(outdir,"none","none",true)
 
 end
